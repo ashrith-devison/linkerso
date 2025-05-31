@@ -14,10 +14,6 @@ app.use(express.static(path.join(__dirname ,"public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Welcome to the Deployment Service API");
-});
-
 // app.get("/test", (req, res) => {
 //   const username = "Likith Chatterjee";
 
