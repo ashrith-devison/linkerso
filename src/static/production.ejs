@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Production Dashboard</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    /* Just a quick style to hide history initially */
+    #history {
+      display: none;
+      margin-top: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    .modal {
+      display: none; 
+      position: fixed; 
+      z-index: 1000; 
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
+      position: relative;
+    }
+    .close {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="main">
+    <header class="header">
+      <h1>Production Deployment Dashboard</h1>
+      <div class="user-info">
+        <i class="fas fa-user-circle user-icon"></i>
+        <span class="username"><%= username %></span>
+      </div>
+    </header>
+
+    <div class="controls">
+      <button onclick="openModal()">+ New Deployment</button>
+    </div>
+
+    <div id="testing-data" class="live-data">
+      <p><strong>Last Deployed Date:</strong> <span id="deployed-date"><%= lastDeployed.date %></span></p>
+      <p><strong>Deployed By:</strong> <span id="deployed-source"><%= lastDeployed.deployedUser %></span></p>
+      <p><strong>Version:</strong> <span id="deployed-version"><%= lastDeployed.version %></span></p>
+      <p><strong>Commit ID:</strong> <span id="deployed-commit"><%= lastDeployed.commitId %></span></p>
+      <p><strong>Comments:</strong> <span id="deployed-comments"><%= lastDeployed.comments %></span></p>
+      <button onclick="toggleHistory()">Toggle History</button>
+    </div>
+
+    <div class="history" id="history">
+      <h3>Deployment Log History</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Version</th>
+            <th>Deployed By</th>
+            <th>Commit ID</th>
+            <th>Comments</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% logHistory.forEach(log => { %>
+            <tr>
+              <td><%= log.date %></td>
+              <td><%= log.version %></td>
+              <td><%= log.deployedUser %></td>
+              <td><%= log.commitId %></td>
+              <td><%= log.comments %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="deploymentModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h3>New Deployment</h3>
+      <input type="text" id="input-version" placeholder="Version Number" required />
+      <input type="text" id="input-commit" placeholder="Git Commit ID" required />
+      <textarea id="input-comments" placeholder="Comments" rows="3"></textarea>
+      <button type="button" onclick="submitDeployment();">Submit</button>
+    </div>
+  </div>
+
+  <script>
+    const currentUsername = "<%= username %>";
+  </script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

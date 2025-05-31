@@ -1,0 +1,229 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f1f8e9; /* very light green */
+  margin: 0;
+  padding: 0;
+  color: #2e7d32; /* dark green */
+}
+
+.main {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 30px 25px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 2px solid #42a5f5;
+  box-shadow: 0 6px 18px rgba(21, 101, 192, 0.15);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  color: #1565c0;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-icon {
+  font-size: 32px;
+  color: #2e7d32;
+}
+
+.username {
+  font-weight: 600;
+  font-size: 20px;
+  color: #1565c0;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 10px 18px;
+  background-color: #f9a825;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  color: white;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 6px rgba(249, 168, 37, 0.5);
+}
+
+button:hover {
+  background-color: #ef6c00;
+  box-shadow: 0 3px 8px rgba(239, 108, 0, 0.7);
+}
+
+.live-data {
+  background-color: #bbdefb;
+  border: 2px solid #66bb6a;
+  padding: 18px 22px;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(102, 187, 106, 0.15);
+  font-size: 16px;
+  color: #2e7d32;
+}
+
+.live-data p {
+  margin: 8px 0;
+}
+
+.live-data strong {
+  color: #1565c0;
+}
+
+.history {
+  margin-top: 15px;
+  overflow-x: auto;
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgba(21, 101, 192, 0.1);
+}
+
+.history table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.history th, .history td {
+  text-align: left;
+  padding: 12px 15px;
+  border-bottom: 1px solid #c8e6c9;
+}
+
+.history th {
+  background-color: #a5d6a7;
+  font-weight: 600;
+  color: #1565c0;
+}
+
+.history tbody tr:hover {
+  background-color: #42a5f5;
+  cursor: default;
+  color: white;
+}
+
+td.commit-id {
+  font-family: 'Courier New', Courier, monospace;
+  word-break: break-word;
+  max-width: 180px;
+  color: #1b5e20;
+}
+
+td[style] {
+  white-space: pre-wrap;
+  color: #2e7d32;
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(21, 101, 192, 0.3);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal.show {
+  display: flex;
+  animation: zoomIn 0.3s ease forwards;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background-color: #ffffff;
+  padding: 28px 25px;
+  width: 90vw;              /* make sure this is not being overridden */
+  max-width: none;          /* ensure it's not restricted */
+  height: 65vh;
+  box-sizing: border-box;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 8px 28px rgba(21, 101, 192, 0.3);
+  position: relative;
+  transform-origin: center center;
+  overflow-y: auto;
+}
+
+
+.modal-content input, 
+.modal-content textarea {
+  width: 85%;
+  padding: 10px 12px;
+  border: 1.5px solid #66bb6a;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #2e7d32;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+}
+
+.modal-content input:focus, 
+.modal-content textarea:focus {
+  outline: none;
+  border-color: #1565c0;
+  box-shadow: 0 0 6px rgba(21, 101, 192, 0.5);
+}
+
+.modal-content button {
+  background-color: #2e7d32;
+  color: white;
+  padding: 12px 0;
+  font-size: 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 50%;
+}
+
+.modal-content button:hover {
+  background-color: #1565c0;
+}
+
+.close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #d32f2f;
+  font-weight: 700;
+  line-height: 1;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.close:hover {
+  color: #b71c1c;
+}
