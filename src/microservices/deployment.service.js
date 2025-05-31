@@ -69,4 +69,45 @@ router.post('/check-commit', async (req, res) => {
     
 });
 
+router.get('/deployment-history', async (req, res) => {
+  const projectId = process.env.VERCEL_PROJECT_ID;
+  if (!projectId) {
+    return utils.ApiResponse.error(
+      res,
+      400,
+      "Project ID is required",
+      "Please provide a project ID to fetch deployment history."
+    );
+  }
+
+  try {
+    const deployments = await vercelControllers.deploymentFromVercel(projectId);
+    return utils.ApiResponse.success(res, "Deployment History Fetched Successfully", deployments);
+  } catch (err) {
+    console.error('Error fetching deployments:', err);
+    return utils.ApiResponse.error(res, 500, "Failed to fetch deployment history", err.message);
+  }
+});
+
+
+router.delete('/delete-deployment/:deploymentId', async (req, res) => {
+  const { deploymentId } = req.params;
+  if (!deploymentId) {
+    return utils.ApiResponse.error(
+      res,
+      400,
+      "Deployment ID is required",
+      "Please provide a deployment ID to delete."
+    );
+  }
+
+  try {
+    const response = await vercelControllers.deleteDeploymentFromVercel(deploymentId);
+    return utils.ApiResponse.success(res, "Deployment Deleted Successfully", response);
+  } catch (err) {
+    console.error('Error deleting deployment:', err);
+    return utils.ApiResponse.error(res, 500, "Failed to delete deployment", err.message);
+  }
+});
+
 export default router;
