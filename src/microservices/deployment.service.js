@@ -69,6 +69,7 @@ router.post('/check-commit', async (req, res) => {
     
 });
 
+import vercelControllers from '../controllers/production.tickets.controller.js'
 router.get('/deployment-history', async (req, res) => {
   const projectId = process.env.VERCEL_PROJECT_ID;
   if (!projectId) {
