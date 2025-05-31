@@ -46,12 +46,12 @@ app.get("/test", (req, res) => {
   res.render("production", { username, logHistory, lastDeployed });
 });
 
-// import vercelControllers from "./controllers/production.tickets.controller.js";
-// app.get("/history", async (req, res) => {
-//   const deployments = await vercelControllers.deploymentFromVercel(process.env.VERCEL_PROJECT_ID);
-//   res.render('history', { data: deployments, user : {
-//     username: "Likith Chatterjee"
-//   } });
-// });
+import vercelControllers from "./controllers/production.tickets.controller.js";
+app.get("/history", async (req, res) => {
+  const deployments = await vercelControllers.deploymentFromVercel(process.env.VERCEL_PROJECT_ID);
+  res.render('history', { data: deployments, user : {
+    username: "Likith Chatterjee"
+  } });
+});
 
 export default app;
