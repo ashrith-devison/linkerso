@@ -3,43 +3,51 @@ import utils from "../utils/index.utils.js";
 
 const router = Router();
 
+import simpleGit from 'simple-git';
+import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs-extra';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import os from 'os';
+
+
+const isValidCommitId = (id) => /^[0-9a-f]{7,40}$/i.test(id);
+
 const checkCommit = async (commitId) => {
     if (!commitId || !isValidCommitId(commitId)) {
         return "Check the Commit Id once again";
     }
-    const tempDir = path.join('/tmp', uuidv4());
+
+    const tempDir = path.join(os.tmpdir(), uuidv4());
+    console.log(`📁 Temporary directory: ${tempDir}`);
     await fs.ensureDir(tempDir);
 
     const git = simpleGit();
 
     try {
-        let exists = false;
-        for (const depth of DEPTH_LEVELS) {
-            console.log(`Trying with depth = ${depth}`);
-            await fs.emptyDir(tempDir);
-            try {
-                await git.clone(process.env.REPO_URL, tempDir, [`--depth=${depth}`]);
-                const repo = simpleGit(tempDir);
+        await git.clone(process.env.REPO_URL, tempDir, ['--no-checkout', '--filter=blob:none']);
+        const repo = simpleGit(tempDir);
 
-                exists = await repo.raw(['cat-file', 't', commitId])
-                    .then(output => output.trim() === 'commit')
-                    .catch(() => false);
+        console.log(`⬇️ Fetching commit ${commitId}`);
+        await repo.fetch(['origin', commitId]);
 
-                if (exists) {
-                    console.log(`Commit found at depth ${depth}`);
-                    return tempDir; // You can now read from here temporarily
-                }
-            } catch (err) {
-                console.warn(`Clone or check failed at depth=${depth}:`, err.message);
-            }
+        await repo.checkout(commitId);
+        console.log(`✅ Checked out commit ${commitId} (detached HEAD)`);
+        // current commit head
+        const currentCommit = await repo.revparse(['HEAD']);
+        console.log(`Current commit: ${currentCommit}`);
+        if (currentCommit !== commitId) {
+            console.error(`❌ Commit ${commitId} does not match HEAD: ${currentCommit}`);
+            await fs.remove(tempDir); 
+            return false; 
         }
-    } catch (err) {
-        console.warn("Fatal Error in Scanning the Repo", err.message);
-        await fs.remove(tempDir);
-        return err.message;
-    }
 
-    return false;
+        return tempDir; // Success: return path to repo at that commit
+    } catch (err) {
+        console.error(`❌ Error checking out commit: ${err.message}`);
+        await fs.remove(tempDir);
+        return false;
+    }
 };
 
 router.post('/check-commit', async (req, res) => {
@@ -60,3 +68,5 @@ router.post('/check-commit', async (req, res) => {
         return utils.ApiResponse.error(res,202,"Commit ID is not valid", "Check the commit ID once again");
     
 });
+
+export default router;
